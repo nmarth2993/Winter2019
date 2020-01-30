@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -6,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class ControlPanel {
+    // snowfall gif source:
+    // https://tenor.com/view/snow-snow-flakes-winter-gif-13000113
 
     JFrame frame;
     JPanel panel;
@@ -26,18 +30,19 @@ public class ControlPanel {
 
     public ControlPanel() {
         frame = new JFrame();
-        panel = new CPanel();
+        panel = new JPanel();
 
         frame.setContentPane(panel);
 
         title = new JLabel("Winter 2019 Collection");
-        title.setFont(new Font("Arial", Font.BOLD, 36));
+        title.setFont(new Font("Arial", Font.BOLD, 33));
 
         panel.setLayout(new GridLayout(2, 3, 15, 15));
 
-        panel.add(new JLabel());
+        Icon snow = new ImageIcon("img/snowflakes.gif");
+        panel.add(new JLabel(snow));
         panel.add(title);
-        panel.add(new JLabel());
+        panel.add(new JLabel(snow));
 
         mandButton = new JButton("mandelbrot");
         circlesButton = new JButton("circles");
@@ -50,13 +55,12 @@ public class ControlPanel {
             circlesButton.setIcon(new ImageIcon(img2));
             Image img3 = ImageIO.read(new File("img/life.png")).getScaledInstance(100, 100, Image.SCALE_DEFAULT);
             lifeButton.setIcon(new ImageIcon(img3));
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-        JButton[] a = {mandButton, circlesButton, lifeButton};
+        JButton[] a = { mandButton, circlesButton, lifeButton };
         ButtonListener buttonListener = new ButtonListener();
         for (int i = 0; i < a.length; i++) {
             a[i].addActionListener(buttonListener);
@@ -68,12 +72,10 @@ public class ControlPanel {
 
         // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        frame.setPreferredSize(new Dimension(1200, 600));
         frame.setVisible(true);
         frame.pack();
-    }
-
-    class CPanel extends JPanel {
-        
+        System.out.println("(width, height): (" + frame.getWidth() + ", " + frame.getHeight() + ")");
     }
 
     class ButtonListener implements ActionListener {
@@ -85,18 +87,16 @@ public class ControlPanel {
                     JFrame.setDefaultLookAndFeelDecorated(false);
                     new MandelbrotGrapher();
                 });
-            }
-            else if (e.getActionCommand().equals("circles")) {
+            } else if (e.getActionCommand().equals("circles")) {
                 SwingUtilities.invokeLater(() -> {
                     JFrame.setDefaultLookAndFeelDecorated(true);
-                    //setting above true makes fullscreen bigger
+                    // setting above true makes fullscreen bigger
                     new Circles();
                 });
-            }
-            else {
+            } else {
                 SwingUtilities.invokeLater(() -> {
                     JFrame.setDefaultLookAndFeelDecorated(false);
-                    //(it's a static variable, have to reset)
+                    // (it's a static variable, have to reset)
                     new Life();
                 });
             }
